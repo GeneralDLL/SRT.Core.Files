@@ -1,0 +1,16 @@
+---
+description: SRT.Core.Files — follow package AI_RULES for file helpers
+alwaysApply: false
+globs: "**/SRT.Core.Files/**/*","**/SRT.Core.SRTFiles*/**/*","**/docs/SRT.Core.Files.*"
+---
+
+# SRT.Core.Files (Cursor rule template)
+
+Copy to `<consumer>/.cursor/rules/SRT.Core.Files.CURSOR_RULE.mdc`.
+
+Follow `docs/SRT.Core.Files.AI_RULES.md`, `API_REFERENCE.md`, `COOKBOOK.md`.
+
+- Project: `SRT.Core.SRTFiles.csproj`; namespace `SRT.Core.SRTFile`
+- Not an SRT plugin — ProjectReference only
+- `WEBPFile` is not public (file commented out)
+- `ExcelPackage.LicenseContext = Commercial` on Excel write
