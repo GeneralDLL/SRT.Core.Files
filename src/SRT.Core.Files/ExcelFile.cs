@@ -117,6 +117,40 @@ namespace SRT.Core.SRTFile
         }
         #endregion
 
+        private static readonly object LicenseSync = new object();
+
+        /// <summary>
+        /// EPPlus 8 rejects LicenseContext. A commercial key in EPPlusLicense (Commercial:&lt;key&gt;) is applied when present.
+        /// Otherwise the noncommercial organization license is used so ExcelPackage can be constructed.
+        /// A license already set by the host is left unchanged.
+        /// </summary>
+        private static void EnsureLicense()
+        {
+            if (OfficeOpenXml.ExcelPackage.License.LicenseType != null)
+                return;
+
+            lock (LicenseSync)
+            {
+                if (OfficeOpenXml.ExcelPackage.License.LicenseType != null)
+                    return;
+
+                var raw = Environment.GetEnvironmentVariable("EPPlusLicense");
+                const string prefix = "Commercial:";
+                if (!string.IsNullOrWhiteSpace(raw) &&
+                    raw.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+                {
+                    var key = raw.Substring(prefix.Length).Trim();
+                    if (key.Length > 0)
+                    {
+                        OfficeOpenXml.ExcelPackage.License.SetCommercial(key);
+                        return;
+                    }
+                }
+
+                OfficeOpenXml.ExcelPackage.License.SetNonCommercialOrganization("SRT");
+            }
+        }
+
         #region Read Data
         /// <summary>
         /// 
@@ -125,11 +159,10 @@ namespace SRT.Core.SRTFile
         /// <returns></returns>
         public List<List<string>> Excel_GetDataFromFile(int worksheet)
         {
-            OfficeOpenXml.ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.Commercial;
+            EnsureLicense();
 
             var lst = new List<List<string>>();
             var package = new OfficeOpenXml.ExcelPackage(new FileInfo(FileFullPath));
-            OfficeOpenXml.ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.Commercial;
             OfficeOpenXml.ExcelWorksheet sheet = package.Workbook.Worksheets[worksheet];
 
             for (int i = 1; i <= sheet.Dimension.End.Row; i++)
@@ -170,7 +203,7 @@ namespace SRT.Core.SRTFile
             try
             {
                 var path = FileFullPath;
-                OfficeOpenXml.ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.Commercial;
+                EnsureLicense();
 
                 var package = new OfficeOpenXml.ExcelPackage();
                 OfficeOpenXml.ExcelWorksheet sheet = package.Workbook.Worksheets.Add(worksheet);
@@ -224,7 +257,7 @@ namespace SRT.Core.SRTFile
             try
             {
                 var path = FileFullPath;
-                OfficeOpenXml.ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.Commercial;
+                EnsureLicense();
 
                 var package = new OfficeOpenXml.ExcelPackage();
                 OfficeOpenXml.ExcelWorksheet sheet = package.Workbook.Worksheets.Add(worksheet);

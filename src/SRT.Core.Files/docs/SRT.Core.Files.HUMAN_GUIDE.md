@@ -6,6 +6,6 @@ File helpers for text, binary, Excel (EPPlus), and zip. This is **not** an `ISRT
 
 Path handling uses Windows-style `\` in several constructors. Empty directory paths may fall back to temp.
 
-EPPlus: `Excel_WriteDataToFile` sets `ExcelPackage.LicenseContext = Commercial`.
+EPPlus 8: Excel methods call `ExcelPackage.License.SetCommercial` when `EPPlusLicense` is `Commercial:<key>`. If no license is set, they call `SetNonCommercialOrganization("SRT")`.
 
 See [API_REFERENCE](SRT.Core.Files.API_REFERENCE.md) and [COOKBOOK](SRT.Core.Files.COOKBOOK.md).

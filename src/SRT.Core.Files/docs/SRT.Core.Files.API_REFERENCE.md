@@ -27,7 +27,7 @@ Does **not** inherit `BasicFile`. Always `.bin`. `WriteData(string)` uses `Binar
 
 `.xlsx`. `Excel_GetDataFromFile(int worksheet)` 0-based.  
 `Excel_WriteDataToFile(List<List<string>>, bool hasHeader = true, string worksheet = "srtSheet1")`  
-Overload with `CellEffect` header/body. Overload `List<DataRow>`. Sets EPPlus `LicenseContext = Commercial`. Write wraps failures in `Exception("Write Data To File Excel", inner)`. Property `FileExist` (not `FileExists`).
+Overload with `CellEffect` header/body. Overload `List<DataRow>`. Before creating `ExcelPackage`, sets `ExcelPackage.License`: `SetCommercial` when environment variable `EPPlusLicense` is `Commercial:<key>`, otherwise `SetNonCommercialOrganization("SRT")` if no license is set yet. Write wraps failures in `Exception("Write Data To File Excel", inner)`. Property `FileExist` (not `FileExists`).
 
 ## `ZipHelper`
 

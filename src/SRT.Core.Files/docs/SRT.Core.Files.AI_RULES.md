@@ -10,6 +10,6 @@ MUST NOT:
 
 - Invent `WEBPFile` usage (commented out).
 - Treat this package as a Core plugin (`Order` / `FeatureName` do not exist).
-- Assume NonCommercial EPPlus license in code (write path sets Commercial).
+- Set `ExcelPackage.LicenseContext`. EPPlus 8 uses `ExcelPackage.License`: commercial key from `EPPlusLicense=Commercial:<key>`, otherwise `SetNonCommercialOrganization("SRT")` when unset.
 
 Working rule: read docs first; if ambiguous, inspect code and update these docs. Keep `SRT.Core.Files.` prefixes.
